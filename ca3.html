@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marine Conservation Observation Platform - Team Supper fast</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 235px;
+            min-height: 100vh;
+            background: #172554;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 8px;
+            color: #60a5fa;
+            font-size: 19px;
+        }
+
+        .sidebar p.meta {
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-bottom: 24px;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            margin: 6px 0;
+            background: transparent;
+            color: white;
+            border: none;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sidebar button:hover,
+        .sidebar button.active {
+            background: #2563eb;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            flex: 1;
+            padding: 30px;
+            min-width: 0;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        h1 {
+            color: #172554;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            font-size: 19px;
+            color: #172554;
+        }
+
+        h3 {
+            color: #006699;
+            font-size: 16px;
+            margin: 12px 0 6px;
+        }
+
+        h4 {
+            color: #005577;
+            font-size: 15px;
+            margin: 12px 0 6px;
+        }
+
+        h6 {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        /* WELCOME & CARDS */
+        .welcome {
+            background: #dbeafe;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .welcome p {
+            margin-top: 8px;
+            color: #475569;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 23px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 160px;
+            box-shadow: 0 2px 8px #ddd;
+        }
+
+        .card h3 {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0 0 12px 0;
+        }
+
+        .card p {
+            font-size: 30px;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 0;
+        }
+
+        /* PANELS */
+        .panel {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 8px #e2e8f0;
+        }
+
+        .upper-title {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .note-text {
+            font-style: italic;
+            color: #004080;
+        }
+
+        .underlined-link {
+            text-decoration: underline;
+        }
+
+        .semi-transparent {
+            opacity: 0.85;
+        }
+
+        #result-box {
+            background-color: #f0f8ff;
+            border: 2px solid #006699;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        blockquote {
+            background-color: #eef7ff;
+            border-left: 4px solid #006699;
+            padding: 10px 14px;
+            margin: 10px 0px;
+        }
+
+        pre {
+            background-color: #f4f8fb;
+            border: 1px solid #99c2e6;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        fieldset {
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9fcff;
+        }
+
+        legend {
+            color: #172554;
+            font-weight: bold;
+            padding: 0px 8px;
+        }
+
+        /* FORMS */
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 11px;
+            margin: 8px 0 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #ffffff;
+        }
+
+        /* BUTTONS */
+        .add-btn, input[type="submit"], input[type="reset"], input[type="button"], #js-section button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 8px;
+            margin-right: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .add-btn:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover, #js-section button:hover {
+            background: #1d4ed8;
+        }
+
+        .green-btn {
+            background: #16a34a;
+        }
+
+        .green-btn:hover {
+            background: #15803d;
+        }
+
+        .search {
+            max-width: 400px;
+        }
+
+        /* TABLES */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            min-width: 450px;
+        }
+
+        th, td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #dbeafe;
+            color: #172554;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .empty {
+            color: #64748b;
+            text-align: center;
+            padding: 20px;
+        }
+
+        ol, ul, dl {
+            margin: 8px 0 14px 22px;
+        }
+
+        dl {
+            margin-left: 0;
+        }
+
+        dd {
+            margin-left: 20px;
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: #2563eb;
+        }
+
+        footer {
+            margin-top: 15px;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media(max-width: 700px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .sidebar button {
+                display: inline-block;
+                width: auto;
+                padding: 10px;
+            }
+
+            main {
+                padding: 18px;
+            }
+        }
+
+        /* PRINT REPORT */
+        @media print {
+            .sidebar,
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                display: block;
+                background: white;
+            }
+
+            main {
+                padding: 0;
+            }
+
+            .page {
+                display: none !important;
+            }
+
+            #reports {
+                display: block !important;
+            }
+
+            .panel {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>MarineHub</h2>
+        <p class="meta">Serial No: 7 | Team Supper fast<br>CSE326 Section K3P26WK</p>
+
+        <button class="active" onclick="showPage('overview-section', this)">
+            Overview &amp; Guidelines
+        </button>
+
+        <button onclick="showPage('media-section', this)">
+            Images, Audio &amp; Video
+        </button>
+
+        <button onclick="showPage('form-section', this)">
+            Observation Form
+        </button>
+
+        <button onclick="showPage('table-section', this)">
+            Observations &amp; Team
+        </button>
+
+        <button onclick="showPage('js-section', this)">
+            JavaScript Demo
+        </button>
+
+        <button onclick="showPage('reports', this)">
+            Reports
+        </button>
+    </div>
+
+    <main>
+
+        <!-- OVERVIEW & GUIDELINES -->
+        <section id="overview-section" class="page active">
+            <h1 class="upper-title">Marine Conservation Observation Platform</h1>
+
+            <div class="welcome">
+                <h2>Welcome - Team Supper fast (Serial No: 7)</h2>
+                <p>
+                    Record and explore marine species sightings, environmental conditions, media, and field notes in one place.
+                </p>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Observations</h3>
+                    <p id="totalObsCount">3</p>
+                </div>
+
+                <div class="card">
+                    <h3>Optimal Sites</h3>
+                    <p id="optimalCount">2</p>
+                </div>
+
+                <div class="card">
+                    <h3>Critical Sites</h3>
+                    <p id="criticalCount">1</p>
+                </div>
+
+                <div class="card">
+                    <h3>Team Members</h3>
+                    <p id="teamCount">3</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>1. Problem Statement &amp; Text Formatting</h2>
+                <article>
+                    <h3>Why This Platform Is Needed</h3>
+                    <p>
+                        Conservation teams collect observations about <strong>marine species</strong> and <em>environmental conditions</em> from different locations. Without structured records, organizing these observations is difficult.
+                    </p>
+                    <p>
+                        Our project helps record and explore marine conservation observations such as sightings, locations, dates, environmental conditions, photographs, and notes.
+                    </p>
+                    <p>
+                        Text formatting examples:
+                        <b>Bold text</b>,
+                        <strong>Strong importance</strong>,
+                        <i>Italic text</i>,
+                        <em>Emphasized text</em>,
+                        <mark>Highlighted observation note</mark>,
+                        <small>Small side note for students</small>,
+                        <del>Old paper logbook</del>,
+                        <ins>New digital record</ins>,
+                        Water formula H<sub>2</sub>O,
+                        Temperature exponent 25<sup>2</sup> scale note,
+                        and short quote <q cite="https://example.org">Protect our oceans every day.</q>
+                    </p>
+                    <blockquote cite="https://example.org/marine">
+                        <p>Structured marine observation records help conservation teams track species and environmental changes across coastal regions.</p>
+                    </blockquote>
+                    <p>
+                        Citation example: <cite>Coastal Wildlife Field Guide</cite>.
+                        Abbreviation example: <abbr title="Marine Protected Area">MPA</abbr>.
+                        Definition example: <dfn>Habitat</dfn> is the natural home of an organism.
+                        Code example: <code>recordObservation()</code>.
+                        Preformatted text example:
+                    </p>
+                    <pre>Obs ID   | Species            | Condition
+OBS-101  | Olive Ridley       | Optimal
+OBS-102  | Staghorn Coral     | Critical</pre>
+                    <h6>Small Sub-heading (h6) - Prepared by Team Supper fast</h6>
+                    <div>
+                        <span style="color: #006600;">Inline span text inside a block div container.</span>
+                    </div>
+                </article>
+            </div>
+
+            <div class="panel">
+                <h2>2. Observation Lists &amp; Guidelines</h2>
+                <h3>Steps to Record an Observation (Ordered List)</h3>
+                <ol type="1">
+                    <li>Choose the marine species and location.</li>
+                    <li>Check the date and environmental condition:
+                        <ol type="a">
+                            <li>Clear or turbid water</li>
+                            <li>Temperature and weather</li>
+                        </ol>
+                    </li>
+                    <li>Add notes and save the record.</li>
+                </ol>
+
+                <h3>Monitored Marine Items (Unordered List)</h3>
+                <ul style="list-style-type: square;">
+                    <li>Sea Turtles</li>
+                    <li>Coral Reefs</li>
+                    <li>Dolphins and Whales
+                        <ul style="list-style-type: circle;">
+                            <li>Bottlenose Dolphin</li>
+                            <li>Humpback Whale</li>
+                        </ul>
+                    </li>
+                    <li>Coastal Mangroves</li>
+                </ul>
+
+                <h3>Key Conservation Terms (Description List)</h3>
+                <dl>
+                    <dt>Species Record</dt>
+                    <dd>Details of the marine organism observed at a location.</dd>
+                    <dt>Environmental Condition</dt>
+                    <dd>Status of water and surrounding marine environment such as Optimal, Moderate, or Critical.</dd>
+                    <dt>Search / Filter</dt>
+                    <dd>Finding specific marine observations quickly by keyword or condition.</dd>
+                </dl>
+
+                <p>
+                    External Reference: <a href="https://www.worldwildlife.org/initiatives/oceans" target="_blank" title="World Wildlife Fund Oceans">World Wildlife Fund Oceans</a> |
+                    <a href="mailto:marine.team@example.com">Email Team</a> |
+                    <a href="tel:+911234567890">Call Desk</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- MEDIA & EMBEDS -->
+        <section id="media-section" class="page">
+            <h1>3. Images, Audio, Video &amp; Iframe</h1>
+
+            <div class="panel">
+                <h2>Marine Image Examples</h2>
+                <p>
+                    <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='130'%3E%3Crect width='200' height='130' fill='%230077b6'/%3E%3Cellipse cx='100' cy='68' rx='46' ry='28' fill='%232a9d8f'/%3E%3Ccircle cx='154' cy='66' r='11' fill='%232a9d8f'/%3E%3Ctext x='100' y='118' font-size='13' fill='%23ffffff' text-anchor='middle'%3ESea Turtle Habitat%3C/text%3E%3C/svg%3E" alt="Sea turtle in ocean" width="200" height="130">
+                    <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='130'%3E%3Crect width='200' height='130' fill='%230096c7'/%3E%3Cpath d='M40 105 V55 M40 75 L22 58 M40 68 L58 50 M100 105 V48 M100 72 L80 54 M100 64 L120 46 M155 105 V60 M155 80 L138 65' stroke='%23ff7b54' stroke-width='7' stroke-linecap='round' fill='none'/%3E%3Ctext x='100' y='122' font-size='13' fill='%23ffffff' text-anchor='middle'%3ECoral Reef Sector%3C/text%3E%3C/svg%3E" alt="Coral reef habitat" width="200" height="130" class="semi-transparent">
+                </p>
+            </div>
+
+            <div class="panel">
+                <h2>Ocean Sound Audio</h2>
+                <audio controls>
+                    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+
+            <div class="panel">
+                <h2>Marine Conservation Video &amp; YouTube Embed</h2>
+                <video width="320" height="180" controls>
+                    <source src="https://whaleresearch.org/wp-content/uploads/2019/07/MASTERV11.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <h4>Embedded YouTube Video (iframe)</h4>
+                <iframe src="https://www.youtube.com/embed/5Rmv3nliwCs" width="320" height="180" title="Sea Turtles 101 | National Geographic" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <!-- OBSERVATION FORM -->
+        <section id="form-section" class="page">
+            <h1>4. Observation Entry Form</h1>
+
+            <div class="panel">
+                <form id="obsForm" onsubmit="return handleFormSubmit();">
+                    <fieldset>
+                        <legend>Marine Sighting Details</legend>
+                        <label for="obsIdInput">Observation ID:</label>
+                        <input type="text" id="obsIdInput" value="OBS-104">
+
+                        <label for="speciesInput">Species Name:</label>
+                        <input type="text" id="speciesInput" placeholder="e.g., Green Sea Turtle">
+
+                        <label for="categoryInput">Category:</label>
+                        <select id="categoryInput">
+                            <option value="Marine Reptile">Marine Reptile</option>
+                            <option value="Coral Reef">Coral Reef</option>
+                            <option value="Marine Mammal">Marine Mammal</option>
+                            <option value="Coastal Habitat">Coastal Habitat</option>
+                        </select>
+
+                        <label for="locationInput">Location:</label>
+                        <input type="text" id="locationInput" placeholder="e.g., Lakshadweep">
+
+                        <label for="conditionSelect">Condition:</label>
+                        <select id="conditionSelect" onchange="checkConditionStatus();">
+                            <option value="Optimal">Optimal</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+
+                        <label for="notesInput">Notes:</label>
+                        <input type="text" id="notesInput" placeholder="Enter field notes">
+
+                        <p>
+                            <input type="submit" value="Add Observation">
+                            <input type="reset" value="Reset Form">
+                            <input type="button" value="Show Project Info" onclick="showProjectAlert();">
+                        </p>
+                    </fieldset>
+                </form>
+
+                <div id="result-box">
+                    <h4>Status &amp; Script Output</h4>
+                    <p id="js-output">Select a condition or submit the form to see output here.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- OBSERVATIONS & TEAM TABLE -->
+        <section id="table-section" class="page">
+            <h1>5. Observations &amp; Team Table</h1>
+
+            <div class="panel">
+                <h2>Stored Observations</h2>
+                <input class="search" type="text" id="obsSearch" placeholder="Search observation by species or location..." oninput="displayObservations()">
+
+                <div class="table-container">
+                    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Obs ID</th>
+                                <th>Date</th>
+                                <th>Species</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Condition</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="obsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Team Members (Serial No: 7 - Supper fast)</h2>
+                <div class="table-container">
+                    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Name</th>
+                                <th>Course / Section</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Team Leader</td>
+                                <td>Ravi Kishan Kumar</td>
+                                <td>CSE326 Section K3P26WK</td>
+                            </tr>
+                            <tr>
+                                <td>Member 2</td>
+                                <td>Sargun Pratap Singh</td>
+                                <td>CSE326 Section K3P26WK</td>
+                            </tr>
+                            <tr>
+                                <td>Member 3</td>
+                                <td>Namo Mishra</td>
+                                <td>CSE326 Section K3P26WK</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- JAVASCRIPT DEMO -->
+        <section id="js-section" class="page">
+            <h1>6. JavaScript Controls &amp; Array / Loop Demo</h1>
+
+            <div class="panel">
+                <h2>Interactive Controls</h2>
+                <p>
+                    <button type="button" onclick="checkConditionStatus();">Check Condition</button>
+                    <button type="button" onclick="showObservationList();">Show Stored Observations</button>
+                    <button type="button" onclick="runLoopAndPopupDemo();">Run Temp &amp; Loop Demo</button>
+                </p>
+                <div id="result-box">
+                    <h4>JavaScript Output</h4>
+                    <p id="js-demo-output">Click a button above to run the demo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- REPORTS -->
+        <section id="reports" class="page">
+            <h1>Observation Reports</h1>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Records</h3>
+                    <p id="reportTotal">3</p>
+                </div>
+
+                <div class="card">
+                    <h3>Optimal</h3>
+                    <p id="reportOptimal">2</p>
+                </div>
+
+                <div class="card">
+                    <h3>Critical</h3>
+                    <p id="reportCritical">1</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Observation Summary</h2>
+                <div class="table-container">
+                    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Obs ID</th>
+                                <th>Species</th>
+                                <th>Location</th>
+                                <th>Condition</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTable"></tbody>
+                    </table>
+                </div>
+
+                <button class="add-btn green-btn no-print" onclick="window.print()">
+                    Print / Save Report as PDF
+                </button>
+            </div>
+        </section>
+
+        <footer class="panel">
+            <p class="underlined-link">Marine Conservation Observation Platform &copy; 2026 Team Supper fast</p>
+        </footer>
+
+    </main>
+
+    <script>
+        const projectInfo = {
+            serialNo: 7,
+            teamName: "Supper fast",
+            title: "Marine Conservation Observation Platform",
+            leader: "Ravi Kishan Kumar",
+            member2: "Sargun Pratap Singh",
+            member3: "Namo Mishra",
+            summary: function() {
+                return "Team " + this.teamName + " (S.No " + this.serialNo + ") - " + this.title;
+            }
+        };
+
+        var observations = [
+            { obsId: "OBS-101", date: "2026-09-10", species: "Olive Ridley Turtle", category: "Marine Reptile", location: "Rushikulya Coast", condition: "Optimal", notes: "14 turtles seen near shore" },
+            { obsId: "OBS-102", date: "2026-09-12", species: "Staghorn Coral", category: "Coral Reef", location: "Gulf of Mannar", condition: "Critical", notes: "Warm water stress noticed" },
+            { obsId: "OBS-103", date: "2026-09-15", species: "Bottlenose Dolphin", category: "Marine Mammal", location: "Andaman Sea", condition: "Optimal", notes: "Pod of 6 dolphins observed" }
+        ];
+
+        function showPage(pageName, button) {
+            let pages = document.querySelectorAll(".page");
+            for (let i = 0; i < pages.length; i++) {
+                pages[i].classList.remove("active");
+            }
+            document.getElementById(pageName).classList.add("active");
+
+            let buttons = document.querySelectorAll(".sidebar button");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            if (button) button.classList.add("active");
+
+            if (pageName === "reports") {
+                displayReports();
+            }
+        }
+
+        function setOutputText(htmlText) {
+            let out1 = document.getElementById("js-output");
+            let out2 = document.getElementById("js-demo-output");
+            if (out1) out1.innerHTML = htmlText;
+            if (out2) out2.innerHTML = htmlText;
+        }
+
+        function showProjectAlert() {
+            let infoText = projectInfo.summary() + "<br>Leader: " + projectInfo.leader + ", Members: " + projectInfo.member2 + ", " + projectInfo.member3;
+            try {
+                alert(projectInfo.summary() + "\nLeader: " + projectInfo.leader + ", Members: " + projectInfo.member2 + ", " + projectInfo.member3);
+            } catch (e) {}
+            setOutputText("<strong>" + infoText + "</strong>");
+        }
+
+        function checkConditionStatus() {
+            var choice = document.getElementById("conditionSelect").value;
+            var message = choice === "Critical"
+                ? "Alert: Critical marine condition selected! Immediate conservation attention needed."
+                : choice === "Moderate"
+                ? "Notice: Moderate condition selected. Keep monitoring water clarity and debris."
+                : "Good: Optimal marine condition selected.";
+
+            var actionTip;
+            switch (choice) {
+                case "Critical": actionTip = "Action: Report urgent environmental issue to marine team."; break;
+                case "Moderate": actionTip = "Action: Log temperature and turbidity again in 24 hours."; break;
+                default: actionTip = "Action: Continue routine observation logging."; break;
+            }
+            setOutputText("<strong>" + message + "</strong><br>" + actionTip);
+        }
+
+        function showObservationList() {
+            var text = "<b>Stored Observations (" + observations.length + "):</b><br>";
+            for (var i = 0; i < observations.length; i++) {
+                text += (i + 1) + ". " + observations[i].obsId + " - " + observations[i].species + " (" + observations[i].location + ") [" + observations[i].condition + "]<br>";
+            }
+            setOutputText(text);
+        }
+
+        function runLoopAndPopupDemo() {
+            var tempVal = 26;
+            try {
+                var askPrompt = prompt("Enter a sample water temperature in C (e.g. 26):", "26");
+                if (askPrompt === null) return;
+                if (askPrompt.trim() !== "") tempVal = Number(askPrompt);
+                var showSummary = confirm("You entered " + tempVal + " C. Show loop count and summary?");
+                if (!showSummary) return;
+            } catch (e) {
+                tempVal = 26;
+            }
+
+            var count = 1, loopLog = "";
+            while (count <= 3) {
+                if (count === 2) { count++; continue; }
+                loopLog += "Check #" + count + " recorded. ";
+                count++;
+            }
+            var doCount = 1;
+            do { doCount++; } while (doCount <= 1);
+            setOutputText("Entered Temp: " + tempVal + " C | " + loopLog + " | Object property access (bracket): " + projectInfo["teamName"]);
+        }
+
+        function displayObservations() {
+            let table = document.getElementById("obsTableBody");
+            let searchInput = document.getElementById("obsSearch");
+            let search = searchInput ? searchInput.value.toLowerCase() : "";
+            table.innerHTML = "";
+
+            for (let i = 0; i < observations.length; i++) {
+                let matchText = (observations[i].species + " " + observations[i].location + " " + observations[i].obsId).toLowerCase();
+                if (matchText.includes(search)) {
+                    let row = table.insertRow();
+                    row.insertCell().textContent = observations[i].obsId;
+                    row.insertCell().textContent = observations[i].date;
+                    row.insertCell().textContent = observations[i].species;
+                    row.insertCell().textContent = observations[i].category;
+                    row.insertCell().textContent = observations[i].location;
+                    row.insertCell().textContent = observations[i].condition;
+                    row.insertCell().textContent = observations[i].notes;
+                }
+            }
+
+            if (table.rows.length === 0) {
+                let row = table.insertRow();
+                let cell = row.insertCell();
+                cell.colSpan = 7;
+                cell.textContent = "No observations found.";
+                cell.className = "empty";
+            }
+        }
+
+        function updateDashboard() {
+            let optimal = 0;
+            let critical = 0;
+            for (let i = 0; i < observations.length; i++) {
+                if (observations[i].condition === "Optimal") optimal++;
+                if (observations[i].condition === "Critical") critical++;
+            }
+            document.getElementById("totalObsCount").innerText = observations.length;
+            document.getElementById("optimalCount").innerText = optimal;
+            document.getElementById("criticalCount").innerText = critical;
+        }
+
+        function displayReports() {
+            let table = document.getElementById("reportTable");
+            table.innerHTML = "";
+            let optimal = 0;
+            let critical = 0;
+
+            for (let i = 0; i < observations.length; i++) {
+                let row = table.insertRow();
+                row.insertCell().textContent = observations[i].obsId;
+                row.insertCell().textContent = observations[i].species;
+                row.insertCell().textContent = observations[i].location;
+                row.insertCell().textContent = observations[i].condition;
+
+                if (observations[i].condition === "Optimal") optimal++;
+                if (observations[i].condition === "Critical") critical++;
+            }
+
+            document.getElementById("reportTotal").innerText = observations.length;
+            document.getElementById("reportOptimal").innerText = optimal;
+            document.getElementById("reportCritical").innerText = critical;
+        }
+
+        function handleFormSubmit() {
+            var idVal = document.getElementById("obsIdInput").value.trim() || ("OBS-" + (100 + observations.length + 1));
+            var spVal = document.getElementById("speciesInput").value.trim();
+            var catVal = document.getElementById("categoryInput").value;
+            var locVal = document.getElementById("locationInput").value.trim();
+            var condVal = document.getElementById("conditionSelect").value;
+            var noteVal = document.getElementById("notesInput").value.trim() || "No extra notes";
+
+            if (spVal === "" || locVal === "") {
+                try { alert("Please enter both Species Name and Location."); } catch (e) {}
+                setOutputText("<strong>Please enter both Species Name and Location.</strong>");
+                return false;
+            }
+
+            var todayDate = new Date().toISOString().slice(0, 10);
+            observations.push({ obsId: idVal, date: todayDate, species: spVal, category: catVal, location: locVal, condition: condVal, notes: noteVal });
+
+            displayObservations();
+            updateDashboard();
+            displayReports();
+
+            setOutputText("<strong>Added Observation:</strong> " + idVal + " - " + spVal + " (" + locVal + ") [" + condVal + "]");
+            document.getElementById("speciesInput").value = "";
+            document.getElementById("locationInput").value = "";
+            document.getElementById("notesInput").value = "";
+            document.getElementById("obsIdInput").value = "OBS-" + (100 + observations.length + 1);
+            return false;
+        }
+
+        displayObservations();
+        updateDashboard();
+        displayReports();
+    </script>
+
+</body>
+</html>
